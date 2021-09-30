@@ -1,0 +1,188 @@
+The five stages of hacking
+MAKE SURE YOU STAY WITHIN THE SCOPE OF WHAT THEY ASK !!!
+SOME OF THESE THINGS ARE OUTSIDE THE SCOPE
+01. Reconnaissance 
+_______________________
+- Passive vs Active 
+
+
+Location Information:
+- Satellite Images
+TODO- Check if theirs location information on their website
+TODO- Google Maps, find anything of interest
+- Drone recon
+- Building Layout (badge readers, break areas, security, fencing)
+
+
+Job Information:
+- Employees (name, job title, phone number, manager, etc)
+TODO- Check if their employees are on their page, then search their social medias
+TODO- Gather company email addresses using hunter.io
+TODO- Gather information from their website (contact section) for emails
+- Pictures (badge photos, desk photos, computer photos, etc)
+
+
+Target Vaildation:
+- Make sure they are infact the owners of the subnet or domain they give you
+- Tools: WHOIS, NSLOOKUP, DNSRECON
+
+
+Finding Subdomains:
+- Finding out the subdomains of the domain
+- Tools: Google Fu, dig, Nmap, Sublist3r, Bluto, crt.sh, etc.
+
+
+
+Fingerprinting:
+- Finding out what software they are using 
+- Tools: Nmap, Wappalyzer, WhatWeb, BuiltWith, Netcat
+Google dorking
+TODO - site:tesla.com -www
+TODO - site:tesla.com filetype:pdf
+TODO - thehavester
+TODO - bluto
+TODO - https://crt.sh/ information about certificates
+TODO - install wappalyzer - Able to see services that their running
+TODO - search up if any of these services are vulnerable
+TODO - builtwith.com 
+
+COMMANDS:
+########
+theharvester -d tesla.com -l 500 -b google
+(finds some subdomains, emails, and interesting emails)
+pip install bluto
+(bluto does dnslookup, zone transfer, allows for more infromation gathering)
+
+(errors can be fixed using editing data_mine.py)
+(import olefile)
+
+Data Breaches:
+
+Tools: HaveIbeenPwned and similar lists, BreachList
+
+TODO- BreachParse
+
+COMMANDS - BreachParse:
+#########
+git clone https://github.com/cronos-hash/breach-parse
+breach-parse @tesla.com tesla.txt
+#########
+
+TODO- Check databreaches and HaveIbeenPwned + hunter.io emails
+########
+https://haveibeenpwned.com/
+#######
+
+
+
+
+
+02. Scanning and Enumeration
+____________________________
+- Nmap, Nessus, Nikto, etc
+SCAN both TCP side and UDP side
+
+COMMANDS
+########
+whatweb -v tesla.com
+wireshark &
+go to the domain
+then analysis the traffic interactions with the domain
+We need to confirm that theres a [SYN], [SYN, ACK],[ACK]  means that the port is open
+if it shows it means we can confirm that connection
+
+nmap --help
+nmap -sU     	(UDP scan)
+
+Ping sweep:
+nmap -sn 192.168.1.0/24
+
+-T4 - 1 speed (not a stealthy scan)
+nmap -T4 192.168.1.254
+MAKE SURE TO SCAN EVERY PORT
+
+Staging:
+nmap -T4 -p- 192.168.1.254
+
+Which ports are open ?
+
+add them to this scan vv
+vv
+Now scan these ports using:
+Nmap -T4 -A p53,80,111,443,514 192.168.1.254
+
+(Go to scan) Not recommened , worst case scenario
+nmap -T4 -A -p- 192.168.1.254
+we can develop this futher:
+
+
+Saves results:
+nmap -T4 -p- 192.168.1.254 -oA client
+Can write a script that adds all these ports to this scan:
+nmap -T4 -A p<saved client files> 192.168.1.54
+
+UDP SCANS ------
+nmap -sU -T4 192.168.1.254
+cant trust a UDP scan (time consuming , let nexxus find it)
+
+
+
+NMAP SCRIPTS -------
+ls /usr/share/nmap/scripts/
+vulnerability scanning:
+
+nmap -p 443 --script=all 
+
+gives a rating on all the ciphers:
+nmap -p 443 --script=ssl-enum-ciphers tesla.com
+and then the least strength of a cipher
+
+Vulnerabiliy Scanning:
+Download and install nessus:
+dpkg -i Nessus.deb
+make account
+click new scan
+click basic scan
+type in targets seperated by comma at newscan/basic scan
+in the discovery section you can select all ports rather then specify specific ones
+scan type: default , unless its web scan 
+go to My scan > then select Launch
+
+nikto -h https://tesla.com
+
+msfconsole
+search portscan
+use auxiliary/portscan/syn
+set ports 1-65535
+set rhosts 192.168.1.254
+run
+will tell you if a ports open or closed , pretty much it 
+
+but what are you looking for ?
+
+search tomcat
+
+
+########
+
+
+
+
+03. Gaining Access
+________________________
+
+
+
+
+
+04. Maintaining Access
+_________________________
+
+
+
+
+
+05. Covering Tracks
+_____________________
+
+
